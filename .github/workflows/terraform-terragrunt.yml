@@ -35,16 +35,12 @@ jobs:
           sudo mkdir  $HOME/.terraform.d
           cd $HOME/.terraform.d
           sudo touch credentials.tfrc.json
-          tree $HOME/.terraform.d
+          echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > credentials.tfrc.json
+          sudo cat credentials.tfrc.json
           ls -la /home/runner
           echo "✅ Terraform CLI config directory created!"
 
-      - name: Configure Terraform Cloud credentials
-        env:
-          TERRAFORM_CREDENTIALS: $HOME/.terraform.d/credentials.tfrc.json
-        run: |
-          echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > $TERRAFORM_CREDENTIALS
-          echo "🔐 Terraform Cloud credentials configured!"
+      
 
       - name: Run symlink-modules.sh and select workspace
         run: |
