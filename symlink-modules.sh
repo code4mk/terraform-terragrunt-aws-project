@@ -25,16 +25,3 @@ for ENV in "${ENVIRONMENTS[@]}"; do
     
     echo "Symlinks created successfully for $ENV environment."
 done
-
-# Set read-only permissions on the target files through the symlinks
-for ENV in "${ENVIRONMENTS[@]}"; do
-    TARGET_DIR="$COMPONENT_DIR/$ENV/modules"
-    
-    # Iterate over each symlink and set the target file permissions
-    for SYMLINK in "$TARGET_DIR"/*; do
-        TARGET_FILE=$(readlink -f "$SYMLINK")
-        chmod 111 "$TARGET_FILE"
-    done
-done
-
-echo "Permissions set to read-only for all target files."
