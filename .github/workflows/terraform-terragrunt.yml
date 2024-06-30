@@ -1,0 +1,51 @@
+name: Terraform Terragrunt Action
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Triggered manually from GitHub UI
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform CLI
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.8.0  # Replace with your desired version
+
+      - name: Set up Terragrunt CLI
+        run: |
+          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.57.0/terragrunt_linux_amd64
+          sudo chmod +x /tmp/terragrunt
+          sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
+          
+
+      - name: Configure Terraform Cloud credentials
+        env:
+          TF_CLI_CONFIG_FILE: $HOME/.terraformrc
+        run: |
+          echo "credentials \"app.terraform.io\" {" > $TF_CLI_CONFIG_FILE
+          echo "  token = \"${{ secrets.TF_API_TOKEN }}\"" >> $TF_CLI_CONFIG_FILE
+          echo "}" >> $TF_CLI_CONFIG_FILE
+
+      - name: Terragrunt init
+        run: |
+          ./symlink-modules.sh
+          terragrunt workspace select terragrunt
+          cd ./environment/stage
+          terragrunt init
+
+      - name: Terragrunt plan
+        run: |
+          cd path/to/terraform/infra
+          terragrunt plan -out=tfplan
+
+      - name: Display success message
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "🚀 Terraform Terragrunt Action triggered manually!"
