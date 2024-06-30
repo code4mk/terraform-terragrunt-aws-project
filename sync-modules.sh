@@ -9,7 +9,7 @@ ENVIRONMENTS=($(ls -d $COMPONENT_DIR/*/ | xargs -n 1 basename | grep -v '^common
 
 # Loop through each environment and sync the modules
 for ENV in "${ENVIRONMENTS[@]}"; do
-    TARGET_DIR="components/$ENV/modules1"
+    TARGET_DIR="components/$ENV/modules"
     
     # Ensure the target directory exists
     mkdir -p "$TARGET_DIR"

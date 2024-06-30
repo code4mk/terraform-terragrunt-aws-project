@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "../../modules/vpc"
+  source = "./modules/vpc"
 
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = var.vpc_enable_dns_hostnames
@@ -9,7 +9,7 @@ module "vpc" {
 }
 
 module "subnet" {
-  source = "../../modules/subnet"
+  source = "./modules/subnet"
 
   vpc_id                  = module.vpc.vpc_id
   subnet_cidrs            = var.subnet_cidrs
