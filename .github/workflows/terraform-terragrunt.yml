@@ -32,9 +32,10 @@ jobs:
 
       - name: Create Terraform CLI config directory and credentials file
         run: |
-          sudo mkdir  $HOME/.terraform.d
+          mkdir  $HOME/.terraform.d
           cd $HOME/.terraform.d
-          sudo touch credentials.tfrc.json
+          touch credentials.tfrc.json
+          chmod 777 credentials.tfrc.json
           echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > credentials.tfrc.json
           sudo cat credentials.tfrc.json
           ls -la /home/runner
