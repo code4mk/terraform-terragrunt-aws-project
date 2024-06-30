@@ -40,13 +40,13 @@ jobs:
       - name: Terragrunt init
         run: |
           cd ./environment/stage
-          terragrunt init
+          terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
           cd ./environment/stage
-          terragrunt plan
+          terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
       - name: Display success message
