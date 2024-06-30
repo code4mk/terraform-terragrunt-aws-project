@@ -16,7 +16,7 @@ jobs:
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.2.6
+          terraform_version: 1.8.0
           terraform_wrapper: true
 
       - name: Setup Terraform version
@@ -24,9 +24,22 @@ jobs:
       - name: Setup Terraform wrapper path
         run: which terraform
 
-      - name: Setup Terragrunt v0.38.4
+      - name: Create Terraform CLI config directory and credentials file
         run: |
-          sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_linux_amd64"
+          mkdir -p $HOME/.terraform.d
+          touch $HOME/.terraform.d/credentials.tfrc.json
+          echo "✅ Terraform CLI config directory and credentials file created!"
+
+      - name: Configure Terraform Cloud credentials
+        env:
+          TERRAFORM_CREDENTIALS: $HOME/.terraform.d/credentials.tfrc.json
+        run: |
+          echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > $TERRAFORM_CREDENTIALS
+          echo "🔐 Terraform Cloud credentials configured!"
+
+      - name: Setup Terragrunt v0.57.4
+        run: |
+          sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.57.4/terragrunt_linux_amd64"
           sudo chmod +x /bin/terragrunt
           terragrunt -v
           echo "✅ Terragrunt CLI setup completed!"
