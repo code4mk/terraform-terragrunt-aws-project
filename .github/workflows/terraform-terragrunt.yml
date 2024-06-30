@@ -45,7 +45,8 @@ jobs:
 
       - name: Terragrunt plan
         run: |
-          cd ./environment/stage          terragrunt plan
+          cd ./environment/stage
+          terragrunt plan
           echo "📝 Terragrunt plan completed!"
 
       - name: Display success message
