@@ -16,14 +16,19 @@ jobs:
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.8.0  # Replace with your desired version
+          terraform_version: 1.0.0  # Replace with your desired version
 
       - name: Set up Terragrunt CLI
         run: |
-          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.57.0/terragrunt_linux_amd64
+          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.34.0/terragrunt_linux_amd64
           sudo chmod +x /tmp/terragrunt
           sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
-          
+          echo "✅ Terragrunt CLI setup completed!"
+
+      - name: Create Terraform CLI config file
+        run: |
+          touch $HOME/.terraformrc
+          echo "✅ Terraform CLI config file created!"
 
       - name: Configure Terraform Cloud credentials
         env:
@@ -32,18 +37,25 @@ jobs:
           echo "credentials \"app.terraform.io\" {" > $TF_CLI_CONFIG_FILE
           echo "  token = \"${{ secrets.TF_API_TOKEN }}\"" >> $TF_CLI_CONFIG_FILE
           echo "}" >> $TF_CLI_CONFIG_FILE
+          echo "🔐 Terraform Cloud credentials configured!"
 
-      - name: Terragrunt init
+      - name: Run symlink-modules.sh and select workspace
         run: |
           ./symlink-modules.sh
           terragrunt workspace select terragrunt
+          echo "🔗 Symlink modules and workspace selection completed!"
+
+      - name: Terragrunt init
+        run: |
           cd ./environment/stage
           terragrunt init
+          echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd path/to/terraform/infra
+          cd ./environment/stage
           terragrunt plan -out=tfplan
+          echo "📝 Terragrunt plan completed!"
 
       - name: Display success message
         if: github.event_name == 'workflow_dispatch'
