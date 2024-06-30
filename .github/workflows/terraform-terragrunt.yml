@@ -35,7 +35,6 @@ jobs:
       - name: Run symlink-modules.sh and select workspace
         run: |
           ./symlink-modules.sh
-          terragrunt workspace select terragrunt
           echo "🔗 Symlink modules and workspace selection completed!"
 
       - name: Terragrunt init
