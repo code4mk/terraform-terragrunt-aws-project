@@ -19,9 +19,11 @@ jobs:
           ls -la $HOME
 
       - name: Set up Terraform CLI
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.8.0  # Replace with your desired version
+          terraform_version: 1.8.0
+          terraform_wrapper: true
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Set up Terragrunt CLI
         run: |
@@ -29,19 +31,6 @@ jobs:
           sudo chmod +x /tmp/terragrunt
           sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
           echo "✅ Terragrunt CLI setup completed!"
-
-      - name: Create Terraform CLI config directory and credentials file
-        run: |
-          mkdir  $HOME/.terraform.d
-          cd $HOME/.terraform.d
-          touch credentials.tfrc.json
-          chmod 777 credentials.tfrc.json
-          echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > credentials.tfrc.json
-          sudo cat credentials.tfrc.json
-          tree $HOME/.terraform.d
-          echo "✅ Terraform CLI config directory created!"
-
-      
 
       - name: Run symlink-modules.sh and select workspace
         run: |
