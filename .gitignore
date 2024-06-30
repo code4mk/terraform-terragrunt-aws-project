@@ -1,6 +1,6 @@
-components/*/modules
-components/*/common-resources.tf
-!components/common/common-resources.tf
+terraform/*/modules
+terraform/*/common-resources.tf
+!terraform/common/common-resources.tf
 
 # Terragrunt specific
 .terraform
