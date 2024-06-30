@@ -13,22 +13,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Print HOME directory
+        run: |
+          echo "The HOME directory is: $HOME"
+          ls -la $HOME
+
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.8.0
-          terraform_wrapper: true
+          terraform_version: 1.8.0  # Replace with your desired version
 
-      - name: Setup Terraform version
-        run: terraform --version
-      - name: Setup Terraform wrapper path
-        run: which terraform
+      - name: Set up Terragrunt CLI
+        run: |
+          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.57.0/terragrunt_linux_amd64
+          sudo chmod +x /tmp/terragrunt
+          sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
+          echo "✅ Terragrunt CLI setup completed!"
 
       - name: Create Terraform CLI config directory and credentials file
         run: |
           mkdir -p $HOME/.terraform.d
-          touch $HOME/.terraform.d/credentials.tfrc.json
-          echo "✅ Terraform CLI config directory and credentials file created!"
+          echo "✅ Terraform CLI config directory created!"
 
       - name: Configure Terraform Cloud credentials
         env:
@@ -36,13 +41,6 @@ jobs:
         run: |
           echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > $TERRAFORM_CREDENTIALS
           echo "🔐 Terraform Cloud credentials configured!"
-
-      - name: Setup Terragrunt v0.57.4
-        run: |
-          sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.57.4/terragrunt_linux_amd64"
-          sudo chmod +x /bin/terragrunt
-          terragrunt -v
-          echo "✅ Terragrunt CLI setup completed!"
 
       - name: Run symlink-modules.sh and select workspace
         run: |
