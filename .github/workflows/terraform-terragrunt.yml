@@ -38,7 +38,7 @@ jobs:
           chmod 777 credentials.tfrc.json
           echo "{\"credentials\": {\"app.terraform.io\": {\"token\": \"${{ secrets.TF_API_TOKEN }}\"}}}" > credentials.tfrc.json
           sudo cat credentials.tfrc.json
-          ls -la /home/runner
+          tree $HOME/.terraform.d
           echo "✅ Terraform CLI config directory created!"
 
       
