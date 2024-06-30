@@ -9,6 +9,8 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: terragrunt  # Define TF_WORKSPACE environment variable
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -31,14 +33,7 @@ jobs:
         run: |
           ./symlink-modules.sh
           echo "🔗 Symlink modules and workspace selection completed!"
-
-      - name: Select workspace
-        run: |
-          cd ./environment/stage
-          terragrunt workspace list
           
-          echo "🌐 Workspace 'stage' selected!"
-
       - name: Terragrunt init
         run: |
           cd ./environment/stage
