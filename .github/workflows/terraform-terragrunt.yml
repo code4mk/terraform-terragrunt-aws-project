@@ -33,6 +33,9 @@ jobs:
       - name: Create Terraform CLI config directory and credentials file
         run: |
           sudo mkdir  $HOME/.terraform.d
+          cd $HOME/.terraform.d
+          sudo touch credentials.tfrc.json
+          tree $HOME/.terraform.d
           ls -la /home/runner
           echo "✅ Terraform CLI config directory created!"
 
