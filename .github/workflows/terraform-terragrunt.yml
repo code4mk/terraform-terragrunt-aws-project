@@ -13,11 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Print HOME directory
-        run: |
-          echo "The HOME directory is: $HOME"
-          ls -la $HOME
-
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
@@ -36,6 +31,13 @@ jobs:
         run: |
           ./symlink-modules.sh
           echo "🔗 Symlink modules and workspace selection completed!"
+
+      - name: Select workspace
+        run: |
+          cd ./environment/stage
+          terragrunt workspace list
+          
+          echo "🌐 Workspace 'stage' selected!"
 
       - name: Terragrunt init
         run: |
