@@ -33,6 +33,7 @@ jobs:
       - name: Create Terraform CLI config directory and credentials file
         run: |
           mkdir -p $HOME/.terraform.d
+          ls -la $HOME
           echo "✅ Terraform CLI config directory created!"
 
       - name: Configure Terraform Cloud credentials
