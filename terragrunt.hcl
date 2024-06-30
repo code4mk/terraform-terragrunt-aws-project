@@ -4,12 +4,6 @@ locals {
   workspace_tags = "kintaro_devops"
 }
 
-terraform {
-  before_hook "workspace" {
-    commands = ["plan", "state", "apply", "destroy", "init"]
-    execute = ["terraform", "workspace", "select", "terragrunt"]
-  }
-}
 
 generate "backend" {
   path      = "auto_generated_backend.tf"

@@ -32,7 +32,7 @@ jobs:
           sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
           echo "✅ Terragrunt CLI setup completed!"
 
-      - name: Run symlink-modules.sh and select workspace
+      - name: Run symlink-modules.sh
         run: |
           ./symlink-modules.sh
           echo "🔗 Symlink modules and workspace selection completed!"
