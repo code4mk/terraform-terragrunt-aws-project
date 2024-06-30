@@ -1,7 +1,14 @@
 # Define the Terraform backend configuration to use Terraform Cloud
 locals {
   organization = "kintaro"
-  workspace_tags = "terragrunt"
+  workspace_tags = "kintaro_devops"
+}
+
+terraform {
+  before_hook "workspace" {
+    commands = ["plan", "state", "apply", "destroy", "init"]
+    execute = ["terraform", "workspace", "select", "terragrunt"]
+  }
 }
 
 generate "backend" {
@@ -12,7 +19,7 @@ terraform {
   cloud {
     organization = "${local.organization}"
     workspaces {
-      name = "${local.workspace_tags}"
+      tags = ["${local.workspace_tags}"]
     }
   }
   required_providers {
