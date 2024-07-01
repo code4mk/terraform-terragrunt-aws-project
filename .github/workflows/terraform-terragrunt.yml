@@ -24,16 +24,16 @@ jobs:
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           if [[ "$BRANCH_NAME" == "main" ]]; then
             echo "TF_WORKSPACE=prod-project" >> $GITHUB_ENV
-            echo "TG_WORKDIR=./environment/prod" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/prod" >> $GITHUB_ENV
           elif [[ "$BRANCH_NAME" == "stage" ]]; then
             echo "TF_WORKSPACE=stage" >> $GITHUB_ENV
-            echo "TG_WORKDIR=./environment/stage" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/stage" >> $GITHUB_ENV
           elif [[ "$BRANCH_NAME" == "dev" ]]; then
             echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
-            echo "TG_WORKDIR=./environment/dev" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/dev" >> $GITHUB_ENV
           else
             echo "TF_WORKSPACE=default" >> $GITHUB_ENV
-            echo "TG_WORKDIR=./environment/default" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/default" >> $GITHUB_ENV
           fi
 
       - name: Set up Terraform CLI
@@ -57,13 +57,13 @@ jobs:
 
       - name: Terragrunt init
         run: |
-          cd ${{ env.TG_WORKDIR }}
+          cd ${{ github.workspace }}/$TG_WORKDIR
           terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd ${{ env.TG_WORKDIR }}
+          cd ${{ github.workspace }}/$TG_WORKDIR
           terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
