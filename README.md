@@ -14,7 +14,7 @@ terrafrom-terragrunt-aws-project
 │       ├── main.tf
 │       ├── output.tf
 │       └── variables.tf
-├── terraform
+├── projects
 │   ├── common
 │   │   └── common-resources.tf
 │   ├── stage

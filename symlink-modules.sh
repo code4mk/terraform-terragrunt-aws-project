@@ -4,12 +4,12 @@
 SOURCE_DIR="modules"
 
 # Get the list of environments by reading the directory names inside the terraform folder
-COMPONENT_DIR="terraform"
-ENVIRONMENTS=($(ls -d $COMPONENT_DIR/*/ | xargs -n 1 basename | grep -v '^common$'))
+PROJECT_DIR="project"
+ENVIRONMENTS=($(ls -d $PROJECT_DIR/*/ | xargs -n 1 basename | grep -v '^common$'))
 
 # Loop through each environment and create symlinks for modules
 for ENV in "${ENVIRONMENTS[@]}"; do
-    TARGET_DIR="$COMPONENT_DIR/$ENV/modules"
+    TARGET_DIR="$PROJECT_DIR/$ENV/modules"
     
     # Ensure the target directory exists
     mkdir -p "$TARGET_DIR"
