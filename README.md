@@ -18,15 +18,17 @@ terrafrom-terragrunt-aws-project
 │   ├── common
 │   │   └── common-resources.tf
 │   ├── stage
-│   │   ├── modules (symlink with root modules)
-│   │   ├── common-*.tf (symlink with common)
+│   │   ├── modules (symlink with root modules via script)
+│   │   ├── common-*.tf (symlink with common via script)
 │   │   ├── main.tf
-│   │   └── variables.tf
+│   │   ├── variables.tf
+│   │   └── output.tf
 │   └── prod
-│       ├── modules (symlink with root modules)
+│       ├── modules (symlink with root modules via script)
 │       ├── common-*.tf (symlink with common)
 │       ├── main.tf
-│       └── variables.tf
+│       ├── variables.tf
+│       └── output.tf
 └── environment
     ├── stage
     │   └── terragrunt.hcl

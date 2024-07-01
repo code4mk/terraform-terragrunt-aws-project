@@ -4,19 +4,33 @@ on:
   push:
     branches:
       - main
+      - stage
+      - dev
   workflow_dispatch:  # Triggered manually from GitHub UI
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
     env:
-      TF_WORKSPACE: terragrunt
-      # https://terragrunt.gruntwork.io/docs/getting-started/supported-versions/
       THE_TG_VERSION: 0.57.0
       THE_TF_VERSION: 1.8.0
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set Terraform workspace based on branch
+        id: set-workspace
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "TF_WORKSPACE=prod-project" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "stage-project" ]]; then
+            echo "TF_WORKSPACE=stage" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "dev-project" ]]; then
+            echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
+          else
+            echo "TF_WORKSPACE=default" >> $GITHUB_ENV
+          fi
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
@@ -39,14 +53,14 @@ jobs:
 
       - name: Terragrunt init
         run: |
-          cd ./environment/stage
+          cd ./environment/${{ env.TF_WORKSPACE }}
           terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd ./environment/stage
-          terragrunt plan  --terragrunt-non-interactive
+          cd ./environment/${{ env.TF_WORKSPACE }}
+          terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
       - name: Display success message
