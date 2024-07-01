@@ -24,12 +24,12 @@ jobs:
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           if [[ "$BRANCH_NAME" == "main" ]]; then
             echo "TF_WORKSPACE=prod-project" >> $GITHUB_ENV
-            echo "TG_WORKDIR=environment/prod" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/stage" >> $GITHUB_ENV
           elif [[ "$BRANCH_NAME" == "stage" ]]; then
-            echo "TF_WORKSPACE=stage" >> $GITHUB_ENV
+            echo "TF_WORKSPACE=stage-project" >> $GITHUB_ENV
             echo "TG_WORKDIR=environment/stage" >> $GITHUB_ENV
           elif [[ "$BRANCH_NAME" == "dev" ]]; then
-            echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
+            echo "TF_WORKSPACE=dev-project" >> $GITHUB_ENV
             echo "TG_WORKDIR=environment/dev" >> $GITHUB_ENV
           else
             echo "TF_WORKSPACE=default" >> $GITHUB_ENV
