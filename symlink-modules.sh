@@ -4,7 +4,7 @@
 SOURCE_DIR="modules"
 
 # Get the list of environments by reading the directory names inside the terraform folder
-PROJECT_DIR="project"
+PROJECT_DIR="projects"
 ENVIRONMENTS=($(ls -d $PROJECT_DIR/*/ | xargs -n 1 basename | grep -v '^common$'))
 
 # Loop through each environment and create symlinks for modules
