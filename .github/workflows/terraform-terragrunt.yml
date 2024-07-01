@@ -16,18 +16,18 @@ jobs:
       THE_TF_VERSION: 1.8.0
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.8.0
+          terraform_version: ${{ env.THE_TF_VERSION }}
           terraform_wrapper: true
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Set up Terragrunt CLI
         run: |
-          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.57.0/terragrunt_linux_amd64
+          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.THE_TG_VERSION }}/terragrunt_linux_amd64
           sudo chmod +x /tmp/terragrunt
           sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
           echo "✅ Terragrunt CLI setup completed!"
@@ -35,7 +35,7 @@ jobs:
       - name: Run symlink-modules.sh
         run: |
           ./symlink-modules.sh
-          echo "🔗 Symlink modules and workspace selection completed!"
+          echo "🔗 Symlink modules completed!"
 
       - name: Terragrunt init
         run: |
@@ -46,7 +46,7 @@ jobs:
       - name: Terragrunt plan
         run: |
           cd ./environment/stage
-          terragrunt plan --terragrunt-non-interactive
+          terragrunt plan  --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
       - name: Display success message
