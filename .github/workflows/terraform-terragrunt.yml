@@ -6,52 +6,64 @@ on:
       - main
       - stage
       - dev
-  workflow_dispatch:
+  workflow_dispatch:  # Triggered manually from GitHub UI
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      THE_TG_VERSION: 0.57.0
+      THE_TF_VERSION: 1.8.0
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract and uppercase branch name
-        id: vars
+      - name: Set Terraform workspace based on branch
+        id: set-workspace
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          UPPER_BRANCH_NAME=${BRANCH_NAME^^}
-          echo "UPPER_BRANCH_NAME=${UPPER_BRANCH_NAME}" >> $GITHUB_ENV
-          echo "TG_WORKSPACE_KEY=${UPPER_BRANCH_NAME}_TF_WORKSPACE" >> $GITHUB_ENV
-          echo "TG_WORKDIR_KEY=${UPPER_BRANCH_NAME}_TG_WORKDIR" >> $GITHUB_ENV
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "TF_WORKSPACE=prod-project" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/stage" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "stage" ]]; then
+            echo "TF_WORKSPACE=stage-project" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/stage" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "dev" ]]; then
+            echo "TF_WORKSPACE=dev-project" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/dev" >> $GITHUB_ENV
+          else
+            echo "TF_WORKSPACE=default" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/default" >> $GITHUB_ENV
+          fi
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ secrets['THE_TF_VERSION'] }}
+          terraform_version: ${{ env.THE_TF_VERSION }}
           terraform_wrapper: true
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Set up Terragrunt CLI
         run: |
-          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${{ secrets['THE_TG_VERSION'] }}/terragrunt_linux_amd64
+          wget -qO /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.THE_TG_VERSION }}/terragrunt_linux_amd64
           sudo chmod +x /tmp/terragrunt
           sudo mv /tmp/terragrunt /usr/local/bin/terragrunt
           echo "✅ Terragrunt CLI setup completed!"
 
-      - name: Set Terraform workspace and Terragrunt working directory
+      - name: Run symlink-modules.sh
         run: |
-          echo "TF_WORKSPACE=${{ secrets[env.TG_WORKSPACE_KEY] }}" >> $GITHUB_ENV
-          echo "TG_WORKDIR=${{ secrets[env.TG_WORKDIR_KEY] }}" >> $GITHUB_ENV
+          ./symlink-modules.sh
+          echo "🔗 Symlink modules completed!"
 
       - name: Terragrunt init
         run: |
-          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
+          cd ${{ github.workspace }}/$TG_WORKDIR
           terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
+          cd ${{ github.workspace }}/$TG_WORKDIR
           terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
