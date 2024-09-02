@@ -18,19 +18,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print Terraform and Terragrunt versions
-        run: |
-          echo "Terraform Version: ${{ env.THE_TF_VERSION:0:1 }}***"
-          echo "Terragrunt Version: ${{ env.THE_TG_VERSION:0:1 }}***"
-          
-      - name: Set Terraform workspace based on branch
+      - name: Set Terraform workspace and Terragrunt workdir based on branch
         id: set-workspace
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          UPPER_BRANCH_NAME=${BRANCH_NAME^^}
+          UPPER_BRANCH_NAME=$(echo "${BRANCH_NAME^^}")
           
-          echo "TF_WORKSPACE=${{ secrets[UPPER_BRANCH_NAME + '_TF_WORKSPACE'] }}" >> $GITHUB_ENV
-          echo "TG_WORKDIR=${{ secrets[UPPER_BRANCH_NAME + '_TG_WORKDIR'] }}" >> $GITHUB_ENV
+          if [ "$BRANCH_NAME" == "main" ] || [ "$BRANCH_NAME" == "stage" ] || [ "$BRANCH_NAME" == "dev" ]; then
+            echo "TF_WORKSPACE=${{ secrets[UPPER_BRANCH_NAME + '_TF_WORKSPACE'] }}" >> $GITHUB_ENV
+            echo "TG_WORKDIR=${{ secrets[UPPER_BRANCH_NAME + '_TG_WORKDIR'] }}" >> $GITHUB_ENV
+          else
+            echo "TF_WORKSPACE=default" >> $GITHUB_ENV
+            echo "TG_WORKDIR=environment/default" >> $GITHUB_ENV
+          fi
+
+      - name: Print Terraform and Terragrunt versions
+        run: |
+          echo "Terraform Version: ${{ env.THE_TF_VERSION }}"
+          echo "Terragrunt Version: ${{ env.THE_TG_VERSION }}"
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
@@ -53,13 +58,13 @@ jobs:
 
       - name: Terragrunt init
         run: |
-          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
+          cd ${{ github.workspace }}/$TG_WORKDIR
           terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
+          cd ${{ github.workspace }}/$TG_WORKDIR
           terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
