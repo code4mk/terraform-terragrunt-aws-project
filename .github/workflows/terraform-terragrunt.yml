@@ -45,13 +45,13 @@ jobs:
 
       - name: Terragrunt init
         run: |
-          cd ${{ github.workspace }}/$TG_WORKDIR
+          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
           terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd ${{ github.workspace }}/$TG_WORKDIR
+          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
           terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
