@@ -38,6 +38,17 @@ terrafrom-terragrunt-aws-project
 
 ---
 
+# Run locally
+
+## update config file
+The `config.json` file contains essential configurations for Terraform and Terragrunt. You should update this file to match your environment and branch-specific settings.
+
+## cli command
+
+```bash
+./run.sh
+```
+
 # Run GitHub Action (Terragrunt Plan and Apply)
 
 ## Setting Up GitHub Secrets
@@ -45,14 +56,6 @@ terrafrom-terragrunt-aws-project
 To ensure that the GitHub Action workflow runs correctly, you need to set up the following GitHub secret:
 
 - **`TF_API_TOKEN`**: This is a Terraform Cloud API token used for authentication.
-
-  **Steps to Add the Secret**:
-  1. Navigate to your GitHub repository.
-  2. Click on the "Settings" tab.
-  3. In the left sidebar, click on "Secrets and variables" and then "Actions".
-  4. Click on the "New repository secret" button.
-  5. Enter `TF_API_TOKEN` as the secret name and provide your Terraform Cloud API token as the value.
-  6. Click "Add secret" to save it.
 
 ## Update Config File
 
