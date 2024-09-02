@@ -12,20 +12,17 @@ CONFIG_FILE="./config.json"
 
 # Prompt user to pick an environment
 echo "Available environments:"
-environments=($(jq -r '.branches | keys | .[]' "$CONFIG_FILE"))
-for i in "${!environments[@]}"; do
-  echo "$((i+1)). ${environments[$i]}"
+for env in $(jq -r '.branches | keys | .[]' "$CONFIG_FILE"); do
+  echo " - $env"
 done
 
-read -p "Select an environment by number: " env_num
+read -p "Select an environment: " ENVIRONMENT
 
 # Validate the selected environment
-if ! [[ "$env_num" =~ ^[0-9]+$ ]] || (( env_num < 1 || env_num > ${#environments[@]} )); then
-  echo "Error: Invalid selection."
+if ! jq -e ".branches.$ENVIRONMENT" "$CONFIG_FILE" > /dev/null; then
+  echo "Error: Invalid environment '$ENVIRONMENT'."
   exit 1
 fi
-
-ENVIRONMENT="${environments[$((env_num-1))]}"
 
 # Extract configurations from config.json
 TF_WORKSPACE=$(get_json_value ".branches.$ENVIRONMENT.TF_WORKSPACE" "$CONFIG_FILE")
@@ -44,26 +41,16 @@ cd "$TG_WORKDIR" || { echo "Error: Directory '$TG_WORKDIR' does not exist."; exi
 echo "Initializing Terragrunt..."
 terragrunt init --terragrunt-non-interactive
 
-# Prompt user to select a Terragrunt workspace
-echo "Available Terragrunt workspaces:"
-workspaces=($(terragrunt workspace list | sed 's/^[* ]*//'))
-for i in "${!workspaces[@]}"; do
-  echo "$((i+1)). ${workspaces[$i]}"
-done
-
-read -p "Select a Terragrunt workspace by number: " ws_num
 
 # Validate the selected Terragrunt workspace
-if ! [[ "$ws_num" =~ ^[0-9]+$ ]] || (( ws_num < 1 || ws_num > ${#workspaces[@]} )); then
-  echo "Error: Invalid selection."
+if ! terragrunt workspace list | grep -q "$TF_WORKSPACE"; then
+  echo "Error: Invalid Terragrunt workspace '$TF_WORKSPACE'."
   exit 1
 fi
 
-TG_WORKSPACE="${workspaces[$((ws_num-1))]}"
-
 # Select the Terragrunt workspace
-echo "Selecting Terragrunt workspace: $TG_WORKSPACE"
-terragrunt workspace select "$TG_WORKSPACE"
+echo "Selecting Terragrunt workspace: $TF_WORKSPACE"
+terragrunt workspace select "$TF_WORKSPACE"
 
 # Run Terragrunt plan
 echo "Running Terragrunt plan..."
