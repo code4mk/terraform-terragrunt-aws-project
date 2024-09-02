@@ -1,6 +1,7 @@
-terraform/*/modules
-terraform/*/common-resources.tf
-!terraform/common/common-resources.tf
+projects/*/modules
+projects/*/common-resources.tf
+!projects/common/common-resources.tf
+auto_generated_backend.tf
 
 # Terragrunt specific
 .terraform

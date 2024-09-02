@@ -13,10 +13,6 @@
     "dev": {
       "TF_WORKSPACE": "dev-project",
       "TG_WORKDIR": "environment/dev"
-    },
-    "default": {
-      "TF_WORKSPACE": "default",
-      "TG_WORKDIR": "environment/default"
     }
   }
 }
