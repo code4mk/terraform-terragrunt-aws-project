@@ -1,12 +1,12 @@
 name: Terraform Terragrunt Action
 
 on:
-  push:
-    branches:
-      - main
-      - stage
-      - dev
-  workflow_dispatch:  # Triggered manually from GitHub UI
+  # push:
+  #   branches:
+  #     - main
+  #     - stage
+  #     - dev
+  workflow_dispatch:
 
 jobs:
   terraform:
