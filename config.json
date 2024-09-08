@@ -3,15 +3,15 @@
   "terragrunt_version": "0.57.0",
   "branches": {
     "main": {
-      "TF_WORKSPACE": "prod-project",
+      "TF_WORKSPACE": "terrant-prod",
       "TG_WORKDIR": "environment/stage"
     },
     "stage": {
-      "TF_WORKSPACE": "stage-project",
+      "TF_WORKSPACE": "terrant-stage",
       "TG_WORKDIR": "environment/stage"
     },
     "dev": {
-      "TF_WORKSPACE": "dev-project",
+      "TF_WORKSPACE": "terrant-dev",
       "TG_WORKDIR": "environment/dev"
     }
   }

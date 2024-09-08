@@ -36,7 +36,7 @@ TG_VERSION=$(get_json_value ".terragrunt_version" "$CONFIG_FILE")
 
 echo -e "\n=== Configuration Details ==="
 echo "Selected environment: $ENVIRONMENT"
-echo "Terraform Workspace: $TF_WORKSPACE"
+echo "Terraform Scalr Workspace: $TF_WORKSPACE"
 echo "Terragrunt Working Directory: $TG_WORKDIR"
 echo "Terraform Version: $TF_VERSION"
 echo "Terragrunt Version: $TG_VERSION"
@@ -70,18 +70,9 @@ cd "$TG_WORKDIR" || { echo "Error: Directory '$TG_WORKDIR' does not exist. Pleas
 # Initialize Terraform with Terragrunt
 echo -e "\n=== Initializing Terragrunt ==="
 echo "Running: terragrunt init --terragrunt-non-interactive"
-terragrunt init --terragrunt-non-interactive
+terragrunt init  --terragrunt-non-interactive
 
-# Select the Terragrunt workspace
-echo -e "\n=== Selecting Terragrunt Workspace ==="
-echo "Attempting to select workspace: $TF_WORKSPACE"
-if terragrunt workspace select "$TF_WORKSPACE"; then
-    echo "Workspace '$TF_WORKSPACE' selected successfully."
-else
-    echo "Workspace '$TF_WORKSPACE' not found. Creating new workspace..."
-    terragrunt workspace new "$TF_WORKSPACE"
-    echo "New workspace '$TF_WORKSPACE' created and selected."
-fi
+export THE_TF_WORKSPACE="$TF_WORKSPACE"
 
 # Run the selected Terragrunt action
 echo -e "\n=== Executing Terragrunt $ACTION ==="
