@@ -23,14 +23,14 @@ done
 read -p "Select an environment: " ENVIRONMENT
 
 # Validate the selected environment
-if ! jq -e ".branches.$ENVIRONMENT" "$CONFIG_FILE" > /dev/null; then
+if ! jq -e ".branches.\"$ENVIRONMENT\"" "$CONFIG_FILE" > /dev/null; then
   echo "Error: Invalid environment '$ENVIRONMENT'. Please run the script again and choose a valid environment."
   exit 1
 fi
 
 # Extract configurations from config.json
-TF_WORKSPACE=$(get_json_value ".branches.$ENVIRONMENT.TF_WORKSPACE" "$CONFIG_FILE")
-TG_WORKDIR=$(get_json_value ".branches.$ENVIRONMENT.TG_WORKDIR" "$CONFIG_FILE")
+TF_WORKSPACE=$(get_json_value ".branches.\"$ENVIRONMENT\".TF_WORKSPACE" "$CONFIG_FILE")
+TG_WORKDIR=$(get_json_value ".branches.\"$ENVIRONMENT\".TG_WORKDIR" "$CONFIG_FILE")
 TF_VERSION=$(get_json_value ".terraform_version" "$CONFIG_FILE")
 TG_VERSION=$(get_json_value ".terragrunt_version" "$CONFIG_FILE")
 

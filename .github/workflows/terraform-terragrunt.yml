@@ -26,22 +26,24 @@ jobs:
           CONFIG_FILE="${GITHUB_WORKSPACE}/config.json"
           TF_VERSION=$(jq -r '.terraform_version' $CONFIG_FILE)
           TG_VERSION=$(jq -r '.terragrunt_version' $CONFIG_FILE)
+          
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           BRANCH_CONFIG=$(jq -r --arg branch "$BRANCH_NAME" '.branches[$branch] // .branches.default' $CONFIG_FILE)
           TF_WORKSPACE=$(echo $BRANCH_CONFIG | jq -r '.TF_WORKSPACE')
           TG_WORKDIR=$(echo $BRANCH_CONFIG | jq -r '.TG_WORKDIR')
-
-          echo "TF_WORKSPACE=$TF_WORKSPACE" >> $GITHUB_ENV
+          
           echo "TG_WORKDIR=$TG_WORKDIR" >> $GITHUB_ENV
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_ENV
           echo "TG_VERSION=$TG_VERSION" >> $GITHUB_ENV
+          echo "THE_TF_WORKSPACE=$TF_WORKSPACE" >> $GITHUB_ENV
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           terraform_wrapper: true
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          cli_config_credentials_hostname: ${{ secrets.SCALR_HOSTNAME }}
+          cli_config_credentials_token: ${{ secrets.SCALR_API_TOKEN }}
 
       - name: Set up Terragrunt CLI
         run: |

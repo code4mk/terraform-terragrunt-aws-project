@@ -13,6 +13,10 @@
     "dev": {
       "TF_WORKSPACE": "terrant-dev",
       "TG_WORKDIR": "environment/dev"
+    },
+    "scalr-remote-backend": {
+      "TF_WORKSPACE": "terrant-stage",
+      "TG_WORKDIR": "environment/stage"
     }
   }
 }
