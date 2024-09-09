@@ -12,13 +12,13 @@ module "vpc" {
   tags                 = var.vpc_tags
 }
 
-module "subnet" {
-  source = "./modules/subnet"
+# module "subnet" {
+#   source = "./modules/subnet"
 
-  vpc_id                  = module.vpc.vpc_id
-  subnet_cidrs            = var.subnet_cidrs
-  availability_zones      = var.subnet_availability_zones
-  map_public_ip_on_launch = var.subnet_map_public_ip_on_launch
-  name_prefix             = var.subnet_name_prefix
-  tags                    = var.subnet_tags
-}
+#   vpc_id                  = module.vpc.vpc_id
+#   subnet_cidrs            = var.subnet_cidrs
+#   availability_zones      = var.subnet_availability_zones
+#   map_public_ip_on_launch = var.subnet_map_public_ip_on_launch
+#   name_prefix             = var.subnet_name_prefix
+#   tags                    = var.subnet_tags
+# }

@@ -31,10 +31,12 @@ jobs:
           CONFIG_FILE="${GITHUB_WORKSPACE}/config.json"
           TF_VERSION=$(jq -r '.terraform_version' $CONFIG_FILE)
           TG_VERSION=$(jq -r '.terragrunt_version' $CONFIG_FILE)
+          
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           BRANCH_CONFIG=$(jq -r --arg branch "$BRANCH_NAME" '.branches[$branch] // .branches.default' $CONFIG_FILE)
           TF_WORKSPACE=$(echo $BRANCH_CONFIG | jq -r '.TF_WORKSPACE')
           TG_WORKDIR=$(echo $BRANCH_CONFIG | jq -r '.TG_WORKDIR')
+          
           echo "TG_WORKDIR=$TG_WORKDIR" >> $GITHUB_ENV
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_ENV
           echo "TG_VERSION=$TG_VERSION" >> $GITHUB_ENV
