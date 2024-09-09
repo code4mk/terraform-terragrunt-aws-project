@@ -67,12 +67,14 @@ echo -e "\n=== Changing to Terragrunt Working Directory ==="
 echo "Navigating to: $TG_WORKDIR"
 cd "$TG_WORKDIR" || { echo "Error: Directory '$TG_WORKDIR' does not exist. Please check your configuration."; exit 1; }
 
+export THE_TF_WORKSPACE="$TF_WORKSPACE"
+
 # Initialize Terraform with Terragrunt
 echo -e "\n=== Initializing Terragrunt ==="
 echo "Running: terragrunt init --terragrunt-non-interactive"
 terragrunt init  --terragrunt-non-interactive
 
-export THE_TF_WORKSPACE="$TF_WORKSPACE"
+
 
 # Run the selected Terragrunt action
 echo -e "\n=== Executing Terragrunt $ACTION ==="

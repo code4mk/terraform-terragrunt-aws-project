@@ -4,7 +4,7 @@
   "branches": {
     "main": {
       "TF_WORKSPACE": "terrant-prod",
-      "TG_WORKDIR": "environment/stage"
+      "TG_WORKDIR": "environment/prod"
     },
     "stage": {
       "TF_WORKSPACE": "terrant-stage",
