@@ -35,25 +35,21 @@ jobs:
           echo "TG_WORKDIR=$TG_WORKDIR" >> $GITHUB_ENV
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_ENV
           echo "TG_VERSION=$TG_VERSION" >> $GITHUB_ENV
-          echo "THE_TF_WORKSPACE=$TF_WORKSPACE" >> $GITHUB_ENV
-      
-      - name: Set up Terraform CLI with scalr
-        uses: Scalr/scalr-action@v1
-        with:
-          iac_platform: "terraform"
-          binary_version: ${{ env.TF_VERSION }}
-          scalr_hostname: ${{ secrets.SCALR_HOSTNAME }}
-          scalr_token: ${{ secrets.SCALR_API_TOKEN }}
-          scalr_workspace: ${{ env.THE_TF_WORKSPACE }}
-          binary_wrapper: true
+          echo "TF_WORKSPACE=$TF_WORKSPACE" >> $GITHUB_ENV
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           terraform_wrapper: true
-          cli_config_credentials_hostname: ${{ secrets.SCALR_HOSTNAME }}
-          cli_config_credentials_token: ${{ secrets.SCALR_API_TOKEN }}
+
+      - name: Configure Terraform CLI for Scalr
+        run: |
+          cat << EOF > ~/.terraformrc
+          credentials "hiremostafa.scalr.io" {
+            token = "${{ secrets.SCALR_API_TOKEN }}"
+          }
+          EOF
 
       - name: Set up Terragrunt CLI
         run: |
@@ -69,13 +65,13 @@ jobs:
 
       - name: Terragrunt init
         run: |
-          cd ${{ github.workspace }}/$TG_WORKDIR
+          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
           terragrunt init --terragrunt-non-interactive
           echo "🔧 Terragrunt init completed!"
 
       - name: Terragrunt plan
         run: |
-          cd ${{ github.workspace }}/$TG_WORKDIR
+          cd ${{ github.workspace }}/${{ env.TG_WORKDIR }}
           terragrunt plan --terragrunt-non-interactive
           echo "📝 Terragrunt plan completed!"
 
