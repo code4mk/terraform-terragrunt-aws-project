@@ -1,5 +1,6 @@
 variable "AWS_SECRET_ACCESS_KEY" {
   description = "AWS Secret Access Key"
+  default = "mk"
 }
 
 
