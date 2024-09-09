@@ -36,6 +36,16 @@ jobs:
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_ENV
           echo "TG_VERSION=$TG_VERSION" >> $GITHUB_ENV
           echo "THE_TF_WORKSPACE=$TF_WORKSPACE" >> $GITHUB_ENV
+      
+      - name: Set up Terraform CLI with scalr
+        uses: Scalr/scalr-action@v1
+        with:
+          iac_platform: "terraform"
+          binary_version: ${{ env.TF_VERSION }}
+          scalr_hostname: ${{ secrets.SCALR_HOSTNAME }}
+          scalr_token: ${{ secrets.SCALR_API_TOKEN }}
+          scalr_workspace: ${{ env.THE_TF_WORKSPACE }}
+          binary_wrapper: true
 
       - name: Set up Terraform CLI
         uses: hashicorp/setup-terraform@v3
