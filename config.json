@@ -1,6 +1,6 @@
 {
-  "terraform_version": "1.8.0",
-  "terragrunt_version": "0.57.0",
+  "terraform_version": "1.4.6",
+  "terragrunt_version": "0.52.0",
   "branches": {
     "main": {
       "TF_WORKSPACE": "terrant-prod",
