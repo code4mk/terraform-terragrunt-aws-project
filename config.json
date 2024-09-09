@@ -13,6 +13,10 @@
     "dev": {
       "TF_WORKSPACE": "dev-project",
       "TG_WORKDIR": "environment/dev"
+    },
+    "gitlab-state": {
+      "TF_WORKSPACE": "prod-project",
+      "TG_WORKDIR": "environment/stage"
     }
   }
 }
